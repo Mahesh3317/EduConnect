@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation'; // Use next/navigation for app directory
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import './Login.css'; 
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +11,7 @@ const Login = () => {
     password: ''
   });
 
+  const [loading, setLoading] = useState(false); 
   const router = useRouter();
 
   const handleChange = (e) => {
@@ -21,52 +23,73 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      // Send login data to the backend API
       const res = await axios.post('http://localhost:5000/api/login', formData);
       if (res.data.success) {
-        // Store token and redirect to the dashboard
         localStorage.setItem('token', res.data.token);
-        router.push('/dashboard');
+        const userRole = res.data.role; 
+        
+        if (userRole === 'Teacher') {
+          router.push('/dashboard/teacher');
+        } else if (userRole === 'Senate_student') {
+          router.push('/dashboard/Senate-student');
+        } else if (userRole === 'Student') {
+          router.push('/dashboard/Student');
+        } else {
+          alert('Unknown role!');
+        }
       } else {
         alert(res.data.message);
       }
     } catch (err) {
       console.error(err.message);
       alert('Login failed. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="auth-container">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
+      <div className="login-box">
+        <h2 className="login-title">Login</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              className="input-field"
+            />
+          </div>
 
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              className="input-field"
+            />
+          </div>
 
-        <button type="submit">Login</button>
-      </form>
+          <button
+            type="submit"
+            className="submit-button"
+            disabled={loading}
+          >
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

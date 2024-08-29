@@ -1,7 +1,7 @@
-/* Frontend/educonnect/app/globals.css */
+/* Frontend/educonnect/app/globals.css
 
 /* General Styles */
-* {
+/* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -21,7 +21,7 @@ body {
 }
 
 /* Navbar Styles */
-.navbar {
+/*.navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -46,8 +46,8 @@ body {
 }
 
 /* Hero Section */
-.hero {
-  background-image: url('/your-background-image.jpg'); /* Add your image in the public folder */
+/* .hero {
+  background-image: url('/your-background-image.jpg'); /* Add your image in the public folder 
   background-size: cover;
   background-position: center;
   height: 80vh;
@@ -81,7 +81,7 @@ body {
   background-color: #ff4500;
 }
 
-/* Features Section */
+/* Features Section *
 .features {
   display: flex;
   justify-content: space-between;
@@ -102,7 +102,7 @@ body {
   color: #666;
 }
 
-/* Footer */
+/* Footer *
 .footer {
   text-align: center;
   padding: 20px 0;
@@ -113,4 +113,4 @@ body {
 
 .social-icons {
   margin-top: 10px;
-}
+} */

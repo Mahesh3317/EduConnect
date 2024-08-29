@@ -1,16 +1,16 @@
-// Frontend/educonnect/src/components/Auth/Signup.js
-
 "use client"; // Add this line to indicate it's a client-side component
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation'; // Use next/navigation instead of next/router in the app directory
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import './signup.css'; // Import the CSS for styling
 
 const Signup = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
+    role: 'Student', // Default role matches backend schema
   });
 
   const router = useRouter();
@@ -19,10 +19,13 @@ const Signup = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleRoleChange = (e) => {
+    setFormData({ ...formData, role: e.target.value });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Call your backend API to handle signup
       await axios.post('http://localhost:5000/api/signup', formData);
       router.push('/login'); // Redirect to the login page after successful signup
     } catch (error) {
@@ -31,8 +34,8 @@ const Signup = () => {
   };
 
   return (
-    <div>
-      <h2>Signup</h2>
+    <div className="signup-container">
+      <h2>Create a New Account</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -40,6 +43,7 @@ const Signup = () => {
           placeholder="Name"
           value={formData.name}
           onChange={handleChange}
+          required
         />
         <input
           type="email"
@@ -47,6 +51,7 @@ const Signup = () => {
           placeholder="Email"
           value={formData.email}
           onChange={handleChange}
+          required
         />
         <input
           type="password"
@@ -54,8 +59,42 @@ const Signup = () => {
           placeholder="Password"
           value={formData.password}
           onChange={handleChange}
+          required
         />
-        <button type="submit">Signup</button>
+        <fieldset className="role-selection">
+          <legend>Select your role</legend>
+          <label>
+            <input
+              type="radio"
+              name="role"
+              value="Teacher"
+              checked={formData.role === 'Teacher'}
+              onChange={handleRoleChange}
+            />
+            Teacher
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="role"
+              value="Senate Member"
+              checked={formData.role === 'Senate Member'}
+              onChange={handleRoleChange}
+            />
+            Student (Senate Member)
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="role"
+              value="Student"
+              checked={formData.role === 'Student'}
+              onChange={handleRoleChange}
+            />
+            Student
+          </label>
+        </fieldset>
+        <button type="submit">Sign Up</button>
       </form>
     </div>
   );

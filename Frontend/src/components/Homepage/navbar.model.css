@@ -1,0 +1,42 @@
+/* Frontend/src/components/Homepage/navbar.model.css */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #333;
+    color: white;
+  }
+  
+  .navbar .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .navbar ul {
+    list-style-type: none;
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .navbar ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .signup-btn,
+  .login-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    background-color: #ff6347;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .signup-btn:hover,
+  .login-btn:hover {
+    background-color: #ff4500;
+  }
+  

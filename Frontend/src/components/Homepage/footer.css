@@ -1,0 +1,14 @@
+/* Frontend/src/components/Homepage/footer.model.css */
+
+.footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: #333;
+    color: white;
+    margin-top: auto;
+  }
+  
+  .social-icons {
+    margin-top: 0.5rem;
+  }
+  
