@@ -3,15 +3,15 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import './Login.css'; 
+import './Login.css';
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
   });
 
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleChange = (e) => {
@@ -28,14 +28,14 @@ const Login = () => {
       const res = await axios.post('http://localhost:5000/api/login', formData);
       if (res.data.success) {
         localStorage.setItem('token', res.data.token);
-        const userRole = res.data.role; 
-        
+        const userRole = res.data.role;
+
         if (userRole === 'Teacher') {
           router.push('/dashboard/teacher');
-        } else if (userRole === 'Senate_student') {
-          router.push('/dashboard/Senate-student');
+        } else if (userRole === 'Senate Member') {
+          router.push('/dashboard/senate-student');
         } else if (userRole === 'Student') {
-          router.push('/dashboard/Student');
+          router.push('/dashboard/student');
         } else {
           alert('Unknown role!');
         }

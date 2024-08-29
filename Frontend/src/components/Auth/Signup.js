@@ -1,16 +1,16 @@
-"use client"; // Add this line to indicate it's a client-side component
+'use client';
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import './signup.css'; // Import the CSS for styling
+import './signup.css';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    role: 'Student', // Default role matches backend schema
+    role: 'Student',
   });
 
   const router = useRouter();
@@ -27,7 +27,7 @@ const Signup = () => {
     e.preventDefault();
     try {
       await axios.post('http://localhost:5000/api/signup', formData);
-      router.push('/login'); // Redirect to the login page after successful signup
+      router.push('/login');
     } catch (error) {
       console.error('Error during signup:', error);
     }
@@ -61,8 +61,7 @@ const Signup = () => {
           onChange={handleChange}
           required
         />
-        <fieldset className="role-selection">
-          <legend>Select your role</legend>
+        <div className="role-select">
           <label>
             <input
               type="radio"
@@ -81,7 +80,7 @@ const Signup = () => {
               checked={formData.role === 'Senate Member'}
               onChange={handleRoleChange}
             />
-            Student (Senate Member)
+            Senate Member
           </label>
           <label>
             <input
@@ -93,7 +92,7 @@ const Signup = () => {
             />
             Student
           </label>
-        </fieldset>
+        </div>
         <button type="submit">Sign Up</button>
       </form>
     </div>
