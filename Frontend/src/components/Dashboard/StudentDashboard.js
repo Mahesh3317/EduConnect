@@ -1,19 +1,28 @@
-
-
-
-// src/components/Dashboard/StudentDashboard.js
 import React from 'react';
-import EventCard from '../Events/EventCard';
+import './Dashboard.css';
 
-function StudentDashboard({ events }) {
+const StudentDashboard = () => {
   return (
-    <div>
-      <h1>Student Dashboard</h1>
-      {events.map((event) => (
-        <EventCard key={event.id} event={event} />
-      ))}
+    <div className="dashboard-container">
+      <header className="dashboard-header">
+        <h1>Student Dashboard</h1>
+      </header>
+      <main className="dashboard-main">
+        <div className="dashboard-card">
+          <h2>My Courses</h2>
+          <p>Overview of your enrolled courses and assignments.</p>
+        </div>
+        <div className="dashboard-card">
+          <h2>Grades</h2>
+          <p>View your grades and performance metrics.</p>
+        </div>
+        <div className="dashboard-card">
+          <h2>Events</h2>
+          <p>Upcoming events and activities you might be interested in.</p>
+        </div>
+      </main>
     </div>
   );
-}
+};
 
 export default StudentDashboard;

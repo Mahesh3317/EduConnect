@@ -26,7 +26,9 @@ const Login = () => {
     setLoading(true);
     try {
       const res = await axios.post('http://localhost:5000/api/login', formData);
-      if (res.data.success) {
+      console.log(res); // Log the response to check the structure
+
+      if (res.data.token) {
         localStorage.setItem('token', res.data.token);
         const userRole = res.data.role;
 
@@ -40,11 +42,11 @@ const Login = () => {
           alert('Unknown role!');
         }
       } else {
-        alert(res.data.message);
+        alert('Login failed. Please try again.');
       }
     } catch (err) {
       console.error(err.message);
-      alert('Login failed. Please try again.');
+      alert(err.response?.data?.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
     }

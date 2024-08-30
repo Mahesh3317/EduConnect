@@ -10,7 +10,6 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    match: [/.+@.+\..+/, 'Please enter a valid email address'],
   },
   password: {
     type: String,
@@ -21,22 +20,21 @@ const UserSchema = new mongoose.Schema({
     enum: ['Teacher', 'Senate Member', 'Student'],
     default: 'Student',
   },
-}, { timestamps: true });
-
-UserSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
-
-  try {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (error) {
-    next(error);
-  }
 });
 
-UserSchema.methods.comparePassword = async function (candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password);
+// Hash the password before saving the user
+UserSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) {
+    next();
+  }
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
+
+// Method to compare the password
+UserSchema.methods.comparePassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
 };
 
 module.exports = mongoose.model('User', UserSchema);
