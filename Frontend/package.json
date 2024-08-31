@@ -9,8 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@next/swc-win32-ia32-msvc": "^14.2.6",
+    "@next/swc-win32-x64-msvc": "^14.2.7",
     "axios": "^1.7.5",
+    "multer": "^1.4.5-lts.1",
     "next": "14.2.6",
     "react": "^18",
     "react-dom": "^18"

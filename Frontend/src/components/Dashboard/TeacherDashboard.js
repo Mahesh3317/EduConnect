@@ -1,4 +1,4 @@
-'use client';
+'use client'
 import React, { useState } from 'react';
 import './teacherDashboard.css';
 import EventCard from '../Events/EventCard';
@@ -8,6 +8,8 @@ const TeacherDashboard = () => {
   const [activeFeature, setActiveFeature] = useState('Events');
   const [showEventCreate, setShowEventCreate] = useState(false);
   const [events, setEvents] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isViewingEvent, setIsViewingEvent] = useState(false);
 
   const features = [
     { name: 'Dashboard', content: 'Overview of your activities.' },
@@ -17,13 +19,23 @@ const TeacherDashboard = () => {
     { name: 'Timetable', content: 'Plan and manage your timetable.' }
   ];
 
-  const handleCardClick = () => {
-    setShowEventCreate(true);
+  const handleCardClick = (event) => {
+    setSelectedEvent(event);
+    setIsViewingEvent(true);
   };
 
   const handleCreateEvent = (eventData) => {
     setEvents([eventData, ...events]);
     setShowEventCreate(false);
+  };
+
+  const handleEditEvent = () => {
+    setShowEventCreate(true);
+    setIsViewingEvent(false);
+  };
+
+  const handleCloseEventView = () => {
+    setIsViewingEvent(false);
   };
 
   return (
@@ -57,18 +69,29 @@ const TeacherDashboard = () => {
           </div>
         </header>
         <main className="content-main">
-          {activeFeature === 'Events' && !showEventCreate && (
+          {activeFeature === 'Events' && !showEventCreate && !isViewingEvent && (
             <div className="events-section">
               <div className="event-card-container">
-                <EventCard onClick={handleCardClick} />
+                <EventCard onClick={() => setShowEventCreate(true)} />
                 {events.map((event, index) => (
-                  <EventCard key={index} event={event} />
+                  <EventCard key={index} event={event} onClick={() => handleCardClick(event)} />
                 ))}
               </div>
             </div>
           )}
           {activeFeature === 'Events' && showEventCreate && (
             <EventCreate onCreate={handleCreateEvent} />
+          )}
+          {isViewingEvent && selectedEvent && (
+            <div className="event-view">
+              <img src={selectedEvent.image} alt={selectedEvent.title} className="event-view-image" />
+              <h3>{selectedEvent.title}</h3>
+              <p>{selectedEvent.hostName}</p>
+              <p>{selectedEvent.startDate} - {selectedEvent.endDate}</p>
+              <p>{selectedEvent.description}</p>
+              <button onClick={handleCloseEventView}>OK</button>
+              <button onClick={handleEditEvent}>Edit</button>
+            </div>
           )}
           {activeFeature !== 'Events' && (
             <p>{features.find(feature => feature.name === activeFeature).content}</p>
