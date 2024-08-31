@@ -1,5 +1,5 @@
 import React from 'react';
-import './Dashboard.css';
+import './senateStudentDashboard.css';
 
 const SenateDashboard = () => {
   return (

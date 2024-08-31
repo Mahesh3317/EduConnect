@@ -1,9 +1,13 @@
 'use client';
 import React, { useState } from 'react';
 import './teacherDashboard.css';
+import EventCard from '../Events/EventCard';
+import EventCreate from '../Events/EventCreate';
 
 const TeacherDashboard = () => {
   const [activeFeature, setActiveFeature] = useState('Events');
+  const [showEventCreate, setShowEventCreate] = useState(false);
+  const [events, setEvents] = useState([]);
 
   const features = [
     { name: 'Dashboard', content: 'Overview of your activities.' },
@@ -12,6 +16,15 @@ const TeacherDashboard = () => {
     { name: 'Calendar', content: 'View your teaching schedule.' },
     { name: 'Timetable', content: 'Plan and manage your timetable.' }
   ];
+
+  const handleCardClick = () => {
+    setShowEventCreate(true);
+  };
+
+  const handleCreateEvent = (eventData) => {
+    setEvents([eventData, ...events]);
+    setShowEventCreate(false);
+  };
 
   return (
     <div className="dashboard-container">
@@ -44,7 +57,22 @@ const TeacherDashboard = () => {
           </div>
         </header>
         <main className="content-main">
-          <p>{features.find(feature => feature.name === activeFeature).content}</p>
+          {activeFeature === 'Events' && !showEventCreate && (
+            <div className="events-section">
+              <div className="event-card-container">
+                <EventCard onClick={handleCardClick} />
+                {events.map((event, index) => (
+                  <EventCard key={index} event={event} />
+                ))}
+              </div>
+            </div>
+          )}
+          {activeFeature === 'Events' && showEventCreate && (
+            <EventCreate onCreate={handleCreateEvent} />
+          )}
+          {activeFeature !== 'Events' && (
+            <p>{features.find(feature => feature.name === activeFeature).content}</p>
+          )}
         </main>
       </div>
     </div>
