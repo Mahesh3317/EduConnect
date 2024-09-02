@@ -1,5 +1,5 @@
-'use client'
-import React, { useState } from 'react';
+'use client';
+import React, { useState, useEffect } from 'react';
 import './teacherDashboard.css';
 import EventCard from '../Events/EventCard';
 import EventCreate from '../Events/EventCreate';
@@ -19,13 +19,30 @@ const TeacherDashboard = () => {
     { name: 'Timetable', content: 'Plan and manage your timetable.' }
   ];
 
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/events');
+        if (!response.ok) {
+          throw new Error('Error fetching events');
+        }
+        const data = await response.json();
+        setEvents(data); // Set the fetched events to state
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    fetchEvents(); // Fetch events when the component mounts
+  }, []);
+
   const handleCardClick = (event) => {
     setSelectedEvent(event);
     setIsViewingEvent(true);
   };
 
   const handleCreateEvent = (eventData) => {
-    setEvents([eventData, ...events]);
+    setEvents([eventData, ...events]); // Add the newly created event to the state
     setShowEventCreate(false);
   };
 
@@ -103,3 +120,4 @@ const TeacherDashboard = () => {
 };
 
 export default TeacherDashboard;
+   

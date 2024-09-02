@@ -42,14 +42,26 @@ const EventDetails = () => {
 
   return (
     <div className="event-details">
-      <img src={event.image} alt={event.title} className="event-details-image" />
+  {event ? (
+    <>
+      <img 
+        src={`http://localhost:5000/uploads/${event.image}`} 
+        alt={event.title} 
+        className="event-details-image" 
+        onError={(e) => e.target.src = 'https://via.placeholder.com/150'} // Fallback image in case of error
+      />
       <h3>{event.title}</h3>
       <p>{event.hostName}</p>
       <p>{event.startDate} - {event.endDate}</p>
       <p>{event.description}</p>
       <button onClick={handleOk}>OK</button>
       <button onClick={handleLogin}>Login</button>
-    </div>
+    </>
+  ) : (
+    <p>No event details available.</p>
+  )}
+</div>
+
   );
 };
 

@@ -8,7 +8,8 @@ const EventCard = ({ event, onClick }) => {
       <div className="event-card-content">
         {event ? (
           <>
-            <img src={event.image} alt={event.title} className="event-image" />
+            <img src={`http://localhost:5000/${event.image}`} alt={event.title} className="event-image" />
+            {/* <img src={event.image} alt={event.title} className="event-image" /> */}
             <h3>{event.title}</h3>
             <p>{event.hostName}</p>
             <p>{event.startDate} - {event.endDate}</p>
