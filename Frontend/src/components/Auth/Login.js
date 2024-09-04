@@ -1,96 +1,79 @@
 'use client';
-
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
-import './Login.css';
+import { auth } from '../../firebase/firebaseConfig'; 
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../firebase/firebaseConfig'; 
+import styles from './Login.module.css';
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
-
-  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const router = useRouter();
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     try {
-      const res = await axios.post('http://localhost:5000/api/login', formData);
-      console.log(res); // Log the response to check the structure
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
-      if (res.data.token) {
-        localStorage.setItem('token', res.data.token);
-        const userRole = res.data.role;
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      const userData = userDoc.data();
+      const role = userData?.role || 'Student';
 
-        if (userRole === 'Teacher') {
+      switch (role) {
+        case 'Teacher':
           router.push('/dashboard/teacher');
-        } else if (userRole === 'Senate Member') {
+          break;
+        case 'SenateStudent':
           router.push('/dashboard/senate-student');
-        } else if (userRole === 'Student') {
+          break;
+        case 'Student':
+        default:
           router.push('/dashboard/student');
-        } else {
-          alert('Unknown role!');
-        }
-      } else {
-        alert('Login failed. Please try again.');
+          break;
       }
-    } catch (err) {
-      console.error(err.message);
-      alert(err.response?.data?.message || 'Login failed. Please try again.');
-    } finally {
-      setLoading(false);
+
+    } catch (error) {
+      setError(error.message);
     }
   };
 
+  const handleForgotPassword = () => {
+    router.push('/forgot-password'); // Navigate to the ForgotPassword page
+  };
+
   return (
-    <div className="auth-container">
-      <div className="login-box">
-        <h2 className="login-title">Login</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="input-field"
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              className="input-field"
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="submit-button"
-            disabled={loading}
-          >
-            {loading ? 'Logging in...' : 'Login'}
-          </button>
+    <div className={styles.container}>
+      <div className={styles.formWrapper}>
+        <h2 className={styles.title}>Login</h2>
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <input
+            className={styles.input}
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            required
+          />
+          <input
+            className={styles.input}
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            required
+          />
+          <button className={styles.button} type="submit">Login</button>
         </form>
+        {error && <p className={styles.error}>{error}</p>}
+
+        {/* Forgot Password Link */}
+        <p className={styles.forgotPassword} onClick={handleForgotPassword}>
+          Forgot Password?
+        </p>
       </div>
     </div>
   );

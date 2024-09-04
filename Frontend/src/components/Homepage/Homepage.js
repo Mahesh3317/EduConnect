@@ -1,29 +1,34 @@
-// Frontend/src/components/Homepage/Homepage.js
 'use client';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import EventCard from '../Events/EventCard'; // Import EventCard component
 import './homepage.model.css'; // Import specific styles for Homepage
 
 const Homepage = () => {
-  // Sample event data; replace with dynamic data as needed
-  const events = [
-    {
-      title: 'Math Workshop',
-      hostName: 'Dr. Smith',
-      startDate: '2024-09-01T10:00',
-      endDate: '2024-09-01T12:00',
-      image: '/assets/event1.jpg',
-    },
-    {
-      title: 'Science Fair',
-      hostName: 'Prof. Johnson',
-      startDate: '2024-09-05T14:00',
-      endDate: '2024-09-05T17:00',
-      image: '/assets/event2.jpg',
-    }
-  ];
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/events');
+        if (!response.ok) {
+          throw new Error('Error fetching events');
+        }
+        const data = await response.json();
+        setEvents(data);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  const handleCardClick = (eventId) => {
+    // Redirect to the event details page with the event ID
+    window.location.href = `/event/${eventId}`;
+  };
 
   return (
     <div className="homepage-container">
@@ -52,11 +57,11 @@ const Homepage = () => {
       <section className="events-homepage">
         <h2>Upcoming Events</h2>
         <div className="event-card-container">
-          {events.map((event, index) => (
+          {events.map((event) => (
             <EventCard
-              key={index}
+              key={event.id} // Use unique ID for key
               event={event}
-              onClick={() => window.location.href = `/event/${index}`}
+              onClick={() => handleCardClick(event.id)} // Pass event ID to the click handler
             />
           ))}
         </div>

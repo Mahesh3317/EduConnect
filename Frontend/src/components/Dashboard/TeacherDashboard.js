@@ -27,13 +27,13 @@ const TeacherDashboard = () => {
           throw new Error('Error fetching events');
         }
         const data = await response.json();
-        setEvents(data); // Set the fetched events to state
+        setEvents(data);
       } catch (error) {
         console.error('Error:', error);
       }
     };
 
-    fetchEvents(); // Fetch events when the component mounts
+    fetchEvents();
   }, []);
 
   const handleCardClick = (event) => {
@@ -42,7 +42,7 @@ const TeacherDashboard = () => {
   };
 
   const handleCreateEvent = (eventData) => {
-    setEvents([eventData, ...events]); // Add the newly created event to the state
+    setEvents([eventData, ...events]);
     setShowEventCreate(false);
   };
 
@@ -101,7 +101,11 @@ const TeacherDashboard = () => {
           )}
           {isViewingEvent && selectedEvent && (
             <div className="event-view">
-              <img src={selectedEvent.image} alt={selectedEvent.title} className="event-view-image" />
+              <img 
+                src={`http://localhost:5000/uploads/${selectedEvent.image}`} 
+                alt={selectedEvent.title} 
+                className="event-view-image" 
+              />
               <h3>{selectedEvent.title}</h3>
               <p>{selectedEvent.hostName}</p>
               <p>{selectedEvent.startDate} - {selectedEvent.endDate}</p>
@@ -120,4 +124,3 @@ const TeacherDashboard = () => {
 };
 
 export default TeacherDashboard;
-   
