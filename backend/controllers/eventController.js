@@ -1,3 +1,5 @@
+// controllers/eventController.js
+
 const Event = require('../models/Event');
 const path = require('path');
 
@@ -30,6 +32,24 @@ const getAllEvents = async (req, res) => {
     res.status(200).json(events);
   } catch (error) {
     res.status(400).json({ message: 'Error fetching events', error: error.message });
+  }
+};
+
+// Get a single event by ID (This is the FIX)
+const getEventById = async (req, res) => {
+  console.log('Fetching event by ID:', req.params.id); // Debugging line
+  try {
+    const { id } = req.params;
+    // Ensure you convert the ID to a proper ObjectId type if needed
+    const event = await Event.findById(id);
+
+    if (!event) {
+      return res.status(404).json({ message: 'Event not found' });
+    }
+
+    res.status(200).json(event);
+  } catch (error) {
+    res.status(400).json({ message: 'Error fetching event', error: error.message });
   }
 };
 
@@ -77,6 +97,7 @@ const deleteEvent = async (req, res) => {
 module.exports = {
   createEvent,
   getAllEvents,
+  getEventById, // Export the new controller
   updateEvent,
   deleteEvent,
 };

@@ -1,4 +1,3 @@
-// src/components/EventRegistrationForm.js
 'use client';
 import React, { useState } from 'react';
 import './EventRegistrationForm.css';
@@ -22,10 +21,26 @@ const EventRegistrationForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log('Form submitted:', formData);
+
+    try {
+      const response = await fetch('http://localhost:5000/api/register-event', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to register for the event');
+      }
+
+      console.log('Registration successful');
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   return (

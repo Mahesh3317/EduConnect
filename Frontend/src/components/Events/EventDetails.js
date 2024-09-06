@@ -1,34 +1,35 @@
-// Frontend/src/components/Events/EventDetails.js
-'use client';
-import React from 'react';
-import { useRouter } from 'next/router';
-import './eventDetails.css'; // Import specific styles for EventDetails
+'use client'; // Ensure this is a Client Component
 
-const EventDetails = () => {
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation'; // Use next/navigation instead of next/router
+
+const EventDetails = ({ id }) => {
   const router = useRouter();
-  const { id } = router.query;
+  const [event, setEvent] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  // Sample data; replace with actual data fetching
-  const events = [
-    {
-      title: 'Math Workshop',
-      hostName: 'Dr. Smith',
-      startDate: '2024-09-01T10:00',
-      endDate: '2024-09-01T12:00',
-      description: 'An engaging workshop on advanced mathematics.',
-      image: '/assets/event1.jpg',
-    },
-    {
-      title: 'Science Fair',
-      hostName: 'Prof. Johnson',
-      startDate: '2024-09-05T14:00',
-      endDate: '2024-09-05T17:00',
-      description: 'A fair showcasing innovative science projects.',
-      image: '/assets/event2.jpg',
-    }
-  ];
+  useEffect(() => {
+    if (!id) return; // Early return if `id` is not available
 
-  const event = events[parseInt(id)];
+    const fetchEvent = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/events/${id}`);
+        if (!response.ok) {
+          throw new Error('Error fetching event details');
+        }
+        const data = await response.json();
+        setEvent(data);
+      } catch (error) {
+        console.error('Error:', error);
+        setError('Could not load event details.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvent();
+  }, [id]);
 
   const handleOk = () => {
     window.location.href = '/';
@@ -38,30 +39,27 @@ const EventDetails = () => {
     window.location.href = '/login';
   };
 
-  if (!event) return <p>Event not found</p>;
+  if (loading) return <p>Loading event details...</p>;
+
+  if (error) return <p>{error}</p>;
+
+  if (!event) return <p>Event not found.</p>;
 
   return (
     <div className="event-details">
-  {event ? (
-    <>
-      <img 
-        src={`http://localhost:5000/uploads/${event.image}`} 
-        alt={event.title} 
-        className="event-details-image" 
-        onError={(e) => e.target.src = 'https://via.placeholder.com/150'} // Fallback image in case of error
+      <img
+        src={`http://localhost:5000/${event.image}`}
+        alt={event.title}
+        className="event-details-image"
+        onError={(e) => e.target.src = 'https://via.placeholder.com/150'}
       />
       <h3>{event.title}</h3>
       <p>{event.hostName}</p>
-      <p>{event.startDate} - {event.endDate}</p>
+      <p>{new Date(event.startDate).toLocaleString()} - {new Date(event.endDate).toLocaleString()}</p>
       <p>{event.description}</p>
-      <button onClick={handleOk}>OK</button>
-      <button onClick={handleLogin}>Login</button>
-    </>
-  ) : (
-    <p>No event details available.</p>
-  )}
-</div>
-
+      <button onClick={handleOk}>BACK</button>
+      <button onClick={handleLogin}>JOIN</button>
+    </div>
   );
 };
 

@@ -59,9 +59,9 @@ const Homepage = () => {
         <div className="event-card-container">
           {events.map((event) => (
             <EventCard
-              key={event.id} // Use unique ID for key
+              key={event._id} // Make sure this matches the ID field in your event object
               event={event}
-              onClick={() => handleCardClick(event.id)} // Pass event ID to the click handler
+              onClick={() => handleCardClick(event._id)} // Pass the correct ID
             />
           ))}
         </div>

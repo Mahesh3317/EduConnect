@@ -102,7 +102,7 @@ const TeacherDashboard = () => {
           {isViewingEvent && selectedEvent && (
             <div className="event-view">
               <img 
-                src={`http://localhost:5000/uploads/${selectedEvent.image}`} 
+                src={`http://localhost:5000/${selectedEvent.image}`} 
                 alt={selectedEvent.title} 
                 className="event-view-image" 
               />
@@ -110,7 +110,7 @@ const TeacherDashboard = () => {
               <p>{selectedEvent.hostName}</p>
               <p>{selectedEvent.startDate} - {selectedEvent.endDate}</p>
               <p>{selectedEvent.description}</p>
-              <button onClick={handleCloseEventView}>OK</button>
+              <button onClick={handleCloseEventView}>BACK</button>
               <button onClick={handleEditEvent}>Edit</button>
             </div>
           )}
