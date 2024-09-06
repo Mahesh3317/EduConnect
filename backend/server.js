@@ -23,19 +23,23 @@ mongoose.connect(process.env.MONGO_URI, {
 
 // Middleware
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
-app.use(express.json()); // For parsing application/json
-app.use(express.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Serve static files from the 'uploads' directory
-app.use('/uploads', express.static(uploads));
+app.use('/uploads', express.static(uploadDir));
 
 // Import and use the authentication routes
 const authRoutes = require('./routes/auth');
 app.use('/api', authRoutes);
 
-// Import and use the event routes
+// Import and use the event creation routes
 const eventRoutes = require('./routes/eventRoutes');
 app.use('/api', eventRoutes);
+
+// Import and use the event registration routes
+const eventRegistrationRoutes = require('./routes/eventRegistrationRoutes');
+app.use('/api', eventRegistrationRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 5000;

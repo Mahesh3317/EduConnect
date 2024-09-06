@@ -1,11 +1,16 @@
-'use client';
-import './teacherDashboard.css'; /* Reuse the same CSS as Teacher Dashboard */
+'use client'; // Ensure client-side rendering
+
+import './teacherDashboard.css';
 import React, { useState, useEffect } from 'react';
-import EventCard from '../Events/EventCard'; // Import EventCard component
+import EventCard from '../Events/EventCard';
+import { useRouter } from 'next/navigation'; // Correct import
 
 const StudentDashboard = () => {
   const [activeFeature, setActiveFeature] = useState('My Courses');
   const [events, setEvents] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+
+  const router = useRouter();
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -24,15 +29,23 @@ const StudentDashboard = () => {
     fetchEvents();
   }, []);
 
+  const handleCardClick = (event) => {
+    setSelectedEvent(event);
+  };
+
+  const handleJoinClick = () => {
+    router.push('/event-registration');
+  };
+
+  const handleOkClick = () => {
+    setSelectedEvent(null);
+  };
+
   const features = [
     { name: 'My Courses', content: 'Overview of your enrolled courses and assignments.' },
     { name: 'Grades', content: 'View your grades and performance metrics.' },
     { name: 'Events', content: 'Upcoming events and activities you might be interested in.' },
   ];
-
-  const handleCardClick = (eventId) => {
-    window.location.href = `/event/${eventId}`;
-  };
 
   return (
     <div className="dashboard-container">
@@ -65,18 +78,32 @@ const StudentDashboard = () => {
           </div>
         </header>
         <main className="content-main">
-          <p>{features.find(feature => feature.name === activeFeature).content}</p>
-
-          {activeFeature === 'Events' && (
-            <div className="event-card-container">
-              {events.map((event) => (
-                <EventCard
-                  key={event.id}
-                  event={event}
-                  onClick={() => handleCardClick(event.id)}
-                />
-              ))}
+          {selectedEvent ? (
+            <div className="event-view">
+              <img 
+                src={`http://localhost:5000/${selectedEvent.image}`} 
+                alt={selectedEvent.title} 
+                className="event-view-image" 
+              />
+              <h3>{selectedEvent.title}</h3>
+              <p>{selectedEvent.hostName}</p>
+              <p>{selectedEvent.startDate} - {selectedEvent.endDate}</p>
+              <p>{selectedEvent.description}</p>
+              <button onClick={handleOkClick}>OK</button>
+              <button onClick={handleJoinClick}>JOIN</button>
             </div>
+          ) : (
+            activeFeature === 'Events' && (
+              <div className="event-card-container">
+                {events.map((event) => (
+                  <EventCard
+                    key={event.id}
+                    event={event}
+                    onClick={() => handleCardClick(event)}
+                  />
+                ))}
+              </div>
+            )
           )}
         </main>
       </div>

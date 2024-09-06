@@ -1,11 +1,13 @@
-// Frontend/src/components/SenateDashboard/SenateDashboard.js
-'use client';
+'use client'; // Ensure client-side rendering
 import React, { useState, useEffect } from 'react';
 import EventCard from '../Events/EventCard';
 import './teacherDashboard.css'; // Reuse styles
+import { useRouter } from 'next/navigation'; // Correct import for router
 
 const SenateDashboard = () => {
   const [events, setEvents] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const router = useRouter(); // For redirecting to the registration form
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -24,9 +26,17 @@ const SenateDashboard = () => {
     fetchEvents();
   }, []);
 
-  const handleCardClick = (eventId) => {
-    // Redirect to event details page with eventId
-    window.location.href = `/event/${eventId}`;
+  const handleCardClick = (event) => {
+    setSelectedEvent(event); // Set the clicked event to view details
+  };
+
+  const handleJoinClick = () => {
+    // Redirect to the Event Registration Form
+    router.push('/event-registration');
+  };
+
+  const handleOkClick = () => {
+    setSelectedEvent(null); // Close event details view
   };
 
   return (
@@ -54,15 +64,31 @@ const SenateDashboard = () => {
           </div>
         </header>
         <main className="content-main">
-          <div className="event-card-container">
-            {events.map((event) => (
-              <EventCard
-                key={event.id} // Assuming each event has a unique 'id'
-                event={event}
-                onClick={() => handleCardClick(event.id)}
+          {selectedEvent ? (
+            <div className="event-view">
+              <img 
+                src={`http://localhost:5000/${selectedEvent.image}`} 
+                alt={selectedEvent.title} 
+                className="event-view-image" 
               />
-            ))}
-          </div>
+              <h3>{selectedEvent.title}</h3>
+              <p>{selectedEvent.hostName}</p>
+              <p>{selectedEvent.startDate} - {selectedEvent.endDate}</p>
+              <p>{selectedEvent.description}</p>
+              <button onClick={handleOkClick}>OK</button>
+              <button onClick={handleJoinClick}>JOIN</button>
+            </div>
+          ) : (
+            <div className="event-card-container">
+              {events.map((event) => (
+                <EventCard
+                  key={event.id}
+                  event={event}
+                  onClick={() => handleCardClick(event)}
+                />
+              ))}
+            </div>
+          )}
         </main>
       </div>
     </div>
