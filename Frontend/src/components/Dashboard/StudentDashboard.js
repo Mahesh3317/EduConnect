@@ -33,9 +33,10 @@ const StudentDashboard = () => {
     setSelectedEvent(event);
   };
 
-  const handleJoinClick = () => {
-    router.push('/event-registration');
+  const handleJoinClick = (eventId) => {
+    router.push(`/event-registration?eventId=${eventId}`); // Use actual eventId
   };
+  
 
   const handleOkClick = () => {
     setSelectedEvent(null);

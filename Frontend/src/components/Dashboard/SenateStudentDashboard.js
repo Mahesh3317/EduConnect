@@ -30,10 +30,11 @@ const SenateDashboard = () => {
     setSelectedEvent(event); // Set the clicked event to view details
   };
 
-  const handleJoinClick = () => {
-    // Redirect to the Event Registration Form
-    router.push('/event-registration');
+  const handleJoinClick = (event) => {
+    const eventId = event._id; // Extract the eventId correctly as _id
+    router.push(`/event-registration?eventId=${encodeURIComponent(eventId)}`);
   };
+  
 
   const handleOkClick = () => {
     setSelectedEvent(null); // Close event details view
@@ -76,13 +77,13 @@ const SenateDashboard = () => {
               <p>{selectedEvent.startDate} - {selectedEvent.endDate}</p>
               <p>{selectedEvent.description}</p>
               <button onClick={handleOkClick}>OK</button>
-              <button onClick={handleJoinClick}>JOIN</button>
+              <button onClick={() => handleJoinClick(selectedEvent)}>JOIN</button>
             </div>
           ) : (
             <div className="event-card-container">
               {events.map((event) => (
                 <EventCard
-                  key={event.id}
+                  key={event._id} // Use _id since the API response contains _id
                   event={event}
                   onClick={() => handleCardClick(event)}
                 />

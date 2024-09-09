@@ -110,6 +110,21 @@ const TeacherDashboard = () => {
               <p>{selectedEvent.hostName}</p>
               <p>{selectedEvent.startDate} - {selectedEvent.endDate}</p>
               <p>{selectedEvent.description}</p>
+              
+              {/* Display Registered Participants */}
+              <h4>Registered Participants:</h4>
+              {selectedEvent.participants && selectedEvent.participants.length > 0 ? (
+                <ul>
+                  {selectedEvent.participants.map((participant, index) => (
+                    <li key={index}>
+                      {participant.firstName} {participant.lastName} (ID: {participant.studentId})
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No participants registered yet.</p>
+              )}
+
               <button onClick={handleCloseEventView}>BACK</button>
               <button onClick={handleEditEvent}>Edit</button>
             </div>

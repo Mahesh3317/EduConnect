@@ -58,7 +58,7 @@ const EventDetails = ({ id }) => {
       <p>{new Date(event.startDate).toLocaleString()} - {new Date(event.endDate).toLocaleString()}</p>
       <p>{event.description}</p>
       <button onClick={handleOk}>BACK</button>
-      <button onClick={handleLogin}>JOIN</button>
+      <button onClick={() => handleJoinClick(event.id)}>JOIN</button>
     </div>
   );
 };

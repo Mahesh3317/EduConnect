@@ -3,6 +3,8 @@ import React from 'react';
 import './eventCard.css';
 
 const EventCard = ({ event, onClick }) => {
+  console.log("EventCard event:", event);
+
   return (
     <div className="event-card" onClick={onClick}>
       <div className="event-card-content">

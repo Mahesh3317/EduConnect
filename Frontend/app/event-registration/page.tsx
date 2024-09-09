@@ -1,14 +1,22 @@
-'use client';
-import React from 'react';
-import EventRegistrationForm from '../../src/components/Events/EventRegistrationForm'; // Adjust path as necessary
+'use client';  // Mark this component as a client component
 
-const EventPage = () => {
+import { useSearchParams } from 'next/navigation';
+import EventRegistrationForm from '../../src/components/Events/EventRegistrationForm';
+
+const EventRegistrationPage = () => {
+  const searchParams = useSearchParams();
+  const eventId = searchParams.get('eventId'); // Extract eventId from URL search params
+
+  if (!eventId) {
+    return <p>Loading...</p>; // Add a loading state
+  }
+
   return (
     <div>
-      <h1>Register for Event</h1>
-      <EventRegistrationForm />
+      <h1>Register for Event: {eventId}</h1>
+      <EventRegistrationForm eventId={eventId} />
     </div>
   );
 };
 
-export default EventPage;
+export default EventRegistrationPage;
