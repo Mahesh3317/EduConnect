@@ -5,6 +5,8 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebase/firebaseConfig'; // Import auth and db
 import styles from './Signup.module.css';
+import eyeOpenImg from '../../../public/assets/view.png';
+import eyeCloseImg from '../../../public/assets/hidden.png';
 
 const Signup = () => {
   const [email, setEmail] = useState('');
@@ -12,6 +14,8 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [role, setRole] = useState('Student');
   const [errorMessage, setErrorMessage] = useState('');
+  const [showPass, setShowPass] = useState(false);
+  const [showCPass, setShowCPass] = useState(false);
   const router = useRouter();
 
   const handleSignup = async (e) => {
@@ -39,6 +43,14 @@ const Signup = () => {
     }
   };
 
+  // show and hide password
+  function showHidePass(){
+    setShowPass(!showPass);
+  }
+  function showHideCPass(){
+    setShowCPass(!showCPass);
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.formWrapper}>
@@ -52,22 +64,49 @@ const Signup = () => {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
+          <div style={{
+            position:"relative",
+          }}>
           <input
             className={styles.input}
-            type="password"
+            type={showPass? "text" : "password"}
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          <img style={{
+            cursor:"pointer",
+            width:"20px",
+            position:"absolute",
+            right:"0%",
+            top:"40%",
+            transform:"translateY(-50%)",
+          }}
+           src={showPass? 'assets/view.png' : 'assets/hidden.png'} onClick={showHidePass} />
+           </div>
+
+           <div style={{
+            position:"relative",
+          }} >
           <input
             className={styles.input}
-            type="password"
+            type={showCPass? "text" : "password"}
             placeholder="Confirm Password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
+          <img style={{
+            cursor:"pointer",
+            width:"20px",
+            position:"absolute",
+            right:"0%",
+            top:"40%",
+            transform:"translateY(-50%)",
+          }}
+           src={showCPass? 'assets/view.png' : 'assets/hidden.png'} onClick={showHideCPass} />
+          </div>
           <div className={styles.roleSelection}>
             <label>
               <input
